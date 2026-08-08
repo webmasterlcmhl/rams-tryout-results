@@ -19,6 +19,23 @@
       font-weight: bold;
       text-transform: uppercase;
     }
+    .logo {
+      display: block;
+      margin: 25px auto 10px auto;
+      max-width: 300px;
+    }
+    .notice {
+      text-align: center;
+      font-size: 18px;
+      color: #333;
+      margin: 10px auto 20px auto;
+      max-width: 900px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 6px solid #b00000;
+      border-right: 6px solid #000000;
+    }
     .timestamp {
       text-align: center;
       margin-top: 10px;
@@ -63,7 +80,13 @@
 
 <body>
 
+  <img src="RAMS-logo.png" alt="Rams Logo" class="logo">
   <div class="header">Rams Tryout Results</div>
+
+  <div class="notice">
+    Player releases will be posted to this page. Please keep an eye on it for roster updates.
+  </div>
+
   <div id="timestamp" class="timestamp">Loading timestamp...</div>
 
   <div id="levels"></div>
