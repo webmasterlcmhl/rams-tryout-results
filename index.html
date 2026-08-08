@@ -87,31 +87,29 @@
     Player releases will be posted to this page. Please keep an eye on it for roster updates.
   </div>
 
-  <div id="timestamp" class="timestamp">Loading timestamp...</div>
+  <div id="timestamp" class="timestamp"></div>
 
   <div id="levels"></div>
 
   <script>
+    // --- Generate our own reliable timestamp ---
+    const now = new Date();
+    const formattedNow = now.toLocaleString("en-CA", {
+      dateStyle: "long",
+      timeStyle: "short"
+    });
+    document.getElementById("timestamp").innerHTML = `Last updated: ${formattedNow}`;
+
+    // --- Sheet Data ---
     const sheetID = "1AOU-uDkA6mpJNOwoxjXUP94GYrZAd1q0OIUp14bwagc";
     const jsonURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
 
-    // --- Fetch Sheet Data ---
     fetch(jsonURL)
       .then(res => res.text())
       .then(text => {
         const json = JSON.parse(text.substring(47, text.length - 2));
-
-        // --- Timestamp ---
-        const updatedRaw = json.table.updated;
-        const updatedDate = new Date(updatedRaw);
-        const formatted = updatedDate.toLocaleString("en-CA", {
-          dateStyle: "long",
-          timeStyle: "short"
-        });
-        document.getElementById("timestamp").innerHTML = `Last updated: ${formatted}`;
-
-        // --- Rows ---
         const rows = json.table.rows;
+
         let levels = {};
 
         rows.forEach(row => {
@@ -131,27 +129,26 @@
         const container = document.getElementById("levels");
 
         Object.keys(levels)
-        .filter(level => level && level.toLowerCase() !== "team level")
-        .sort()
-        .forEach(level => {
+          .filter(level => level && level.toLowerCase() !== "team level")
+          .sort()
+          .forEach(level => {
+            const jerseys = levels[level].sort((a, b) => a - b);
 
-          const jerseys = levels[level].sort((a, b) => a - b);
-
-          const html = `
-            <div class="level-box">
-              <div class="level-title">${level} Invited Back</div>
-              <div class="numbers">
-                ${
-                  jerseys.length > 0
-                    ? jerseys.map(num => `<span>${num}</span>`).join("")
-                    : `<div class="fallback">No players invited yet.</div>`
-                }
+            const html = `
+              <div class="level-box">
+                <div class="level-title">${level} Invited Back</div>
+                <div class="numbers">
+                  ${
+                    jerseys.length > 0
+                      ? jerseys.map(num => `<span>${num}</span>`).join("")
+                      : `<div class="fallback">No players invited yet.</div>`
+                  }
+                </div>
               </div>
-            </div>
-          `;
+            `;
 
-          container.innerHTML += html;
-        });
+            container.innerHTML += html;
+          });
       });
   </script>
 
