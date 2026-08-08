@@ -134,15 +134,24 @@
           .forEach(team => {
             const players = teams[team];
 
-            const html = `
-              <div class="team-box">
-                <div class="team-title">${team} - Final Roster</div>
-                ${players.map(p => `<div class="player">${p}</div>`).join("")}
-                  <div class="closing-note">
-                    <strong>Congratulations to all players selected to the team. We look forward to a great season ahead.</strong>
-                  </div>
-              </div>
-            `;
+const html = `
+  <div class="team-box">
+    <div class="team-title">${team} - Final Roster</div>
+
+    <div class="team-intro">
+      <strong>
+        Congratulations to the following players who have been selected to be the 2026‑27 ${team} Stittsville Rams Competitive team:
+      </strong>
+    </div>
+
+    ${players.map(p => `<div class="player">${p}</div>`).join("")}
+
+    <div class="closing-note">
+      <strong>Congratulations to all players selected to the team. We look forward to a great season ahead.</strong>
+    </div>
+  </div>
+`;
+
 
             container.innerHTML += html;
           });
