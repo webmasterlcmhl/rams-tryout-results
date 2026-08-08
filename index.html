@@ -60,6 +60,12 @@
       color: #b00000;
       text-transform: uppercase;
     }
+    h3 {
+      margin-bottom: 10px;
+      color: #b00000;
+      text-transform: uppercase;
+      font-size: 20px;
+    }
     .numbers span {
       display: inline-block;
       margin: 8px 12px;
@@ -77,18 +83,19 @@
       text-align: center;
       font-style: italic;
     }
-    h3 {
-      margin-bottom: 10px;
-      color: #b00000;
-      text-transform: uppercase;
-      font-size: 20px;
+    .sitting-header {
+      font-size: 17px;
+      color: #333;
+      margin: 20px 0 10px 0;
+      text-align: center;
+      font-weight: 600;
     }
     .closing-note {
-      margin-top: 25px;
-      font-size: 18px;
+      font-size: 16px;
       color: #333;
       text-align: center;
-      line-height: 1.4;
+      line-height: 1.5;
+      margin-top: 25px;
     }
     .closing-note a {
       color: #b00000;
@@ -112,7 +119,6 @@
   <div id="levels"></div>
 
   <script>
-
     const csvURL =
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
 
@@ -150,7 +156,6 @@
 
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
-
           const jersey = row[jerseyIndex]?.trim();
           const status = row[statusIndex]?.trim();
           const level = row[levelIndex]?.trim();
@@ -159,7 +164,6 @@
           const nextLocation = row[nextLocationIndex]?.trim();
 
           if (!jersey || !status || !level) continue;
-
           if (!levels[level]) levels[level] = [];
 
           levels[level].push({
@@ -177,8 +181,14 @@
           .filter(level => level && level.trim() !== "" && level.toLowerCase() !== "teamlevel")
           .sort()
           .forEach(level => {
-
             const normalizedLevel = level.trim().replace(/\s+/g, " ");
+            const convenorEmail =
+              convenorEmails[normalizedLevel] ||
+              Object.keys(convenorEmails).find(key => normalizedLevel.includes(key))
+                ? convenorEmails[
+                    Object.keys(convenorEmails).find(key => normalizedLevel.includes(key))
+                  ]
+                : "";
 
             const playing = levels[level]
               .filter(j => j.status === "Playing")
@@ -196,12 +206,9 @@
 
             const html = `
               <div class="level-box">
-
                 <div class="level-title">${level} Tryout Update</div>
 
-                <h3>
-                  NEXT SESSION: ${sessionDate} / ${sessionTime} / ${sessionLocation}
-                </h3>
+                <h3>NEXT SESSION: ${sessionDate} / ${sessionTime} / ${sessionLocation}</h3>
 
                 <h3>Players Playing Tonight</h3>
                 <div class="numbers">
@@ -212,9 +219,10 @@
                   }
                 </div>
 
-                <h3 style="margin-top:25px;">
-                  The following players are invited to continue with the tryout process, but will not be participating in the session on ${sessionDate}.
-                </h3>
+                <div class="sitting-header">
+                  The following players are invited to continue with the tryout process,
+                  but will not be participating in the session on ${sessionDate}.
+                </div>
                 <div class="numbers">
                   ${
                     sitting.length > 0
@@ -229,22 +237,17 @@
                     Those not listed above should report to the ${level} SMHA house league sort-out process.<br><br>
                     House League Convenor Contact:
                     ${
-                      convenorEmails[normalizedLevel]
-                        ? `<a href="mailto:${convenorEmails[normalizedLevel]}">${convenorEmails[normalizedLevel]}</a>`
+                      convenorEmail
+                        ? `<a href="mailto:${convenorEmail}">${convenorEmail}</a>`
                         : ""
                     }
                   </strong>
                 </div>
-
               </div>
             `;
-
             container.innerHTML += html;
           });
-
       });
-
   </script>
 
 </body>
-</html>
