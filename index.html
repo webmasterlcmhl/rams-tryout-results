@@ -19,7 +19,7 @@
       font-weight: bold;
       text-transform: uppercase;
     }
-    .message-box {
+    .level-box {
       max-width: 900px;
       margin: 30px auto;
       padding: 25px;
@@ -27,18 +27,13 @@
       border-left: 8px solid #b00000;
       border-right: 8px solid #000000;
       border-radius: 6px;
-      font-size: 18px;
-      line-height: 1.6;
     }
-    .numbers {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 22px;
-      text-align: center;
+    .level-title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #b00000;
+      text-transform: uppercase;
     }
     .numbers span {
       display: inline-block;
@@ -48,6 +43,7 @@
       color: #fff;
       border-radius: 4px;
       font-weight: bold;
+      font-size: 20px;
     }
   </style>
 </head>
@@ -56,13 +52,7 @@
 
   <div class="header">Rams Tryout Results</div>
 
-  <div class="message-box">
-    <p>The following jersey numbers have been selected to advance to the next stage of evaluations.</p>
-    <p>Players whose numbers do not appear below should report to their designated house league convenor for placement.</p>
-    <p>We thank all athletes for their effort and participation throughout the tryout process.</p>
-  </div>
-
-  <div class="numbers" id="results">Loading results...</div>
+  <div id="levels"></div>
 
   <script>
     const sheetID = "1AOU-uDkA6mpJNOwoxjXUP94GYrZAd1q0OIUp14bwagc";
@@ -74,23 +64,37 @@
         const json = JSON.parse(text.substring(47, text.length - 2));
         const rows = json.table.rows;
 
-        let invited = [];
+        let levels = {};
 
         rows.forEach(row => {
           const jersey = row.c[0]?.v;
           const status = row.c[1]?.v;
+          const level = row.c[2]?.v;
+
+          if (!jersey || !status || !level) return;
 
           if (status === "InvitedBack") {
-            invited.push(jersey);
+            if (!levels[level]) levels[level] = [];
+            levels[level].push(jersey);
           }
         });
 
-        invited.sort((a, b) => a - b);
+        const container = document.getElementById("levels");
 
-        const container = document.getElementById("results");
-        container.innerHTML = invited.length
-          ? invited.map(num => `<span>${num}</span>`).join("")
-          : "No players have been invited back yet.";
+        Object.keys(levels).sort().forEach(level => {
+          const jerseys = levels[level].sort((a, b) => a - b);
+
+          const html = `
+            <div class="level-box">
+              <div class="level-title">${level} Invited Back</div>
+              <div class="numbers">
+                ${jerseys.map(num => `<span>${num}</span>`).join("")}
+              </div>
+            </div>
+          `;
+
+          container.innerHTML += html;
+        });
       });
   </script>
 
