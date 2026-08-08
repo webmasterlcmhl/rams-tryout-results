@@ -11,6 +11,7 @@
     .timestamp { text-align: center; margin-top: 10px; font-size: 16px; color: #444; }
     .level-box { max-width: 900px; margin: 30px auto; padding: 25px; background: #fff; border-left: 8px solid #000; border-right: 8px solid #b00000; border-radius: 6px; }
     .level-title { font-size: 26px; font-weight: bold; margin-bottom: 15px; color: #000; text-transform: uppercase; }
+    .notes { font-size: 18px; color: #333; margin-bottom: 20px; font-style: italic; }
     .section-divider { border-top: 1px solid #b00000; margin: 25px 0; }
     .section-header { font-size: 18px; color: #000; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
     .numbers { margin-left: 10px; margin-bottom: 20px; }
@@ -79,6 +80,7 @@
           const jersey = row[idx.jersey]?.trim();
           const status = row[idx.status]?.trim();
           const level = row[idx.level]?.trim();
+          const notes = row[idx.notes]?.trim();
 
           if (!jersey || !status || !level) continue;
 
@@ -106,7 +108,7 @@
           const fullLocation = locationParts.join(" ").trim() || "TBD";
 
           if (!levels[level]) levels[level] = [];
-          levels[level].push({ jersey, status, fullDate, time, fullLocation });
+          levels[level].push({ jersey, status, notes, fullDate, time, fullLocation });
         }
 
         const container = document.getElementById("levels");
@@ -124,9 +126,14 @@
             const sessionTime = levels[level][0].time;
             const sessionLocation = levels[level][0].fullLocation;
 
+            const levelNotes = levels[level].find(j => j.notes)?.notes || "";
+
             container.innerHTML += `
               <div class="level-box">
                 <div class="level-title">${level} Tryout Update</div>
+
+                ${levelNotes ? `<div class="notes">${levelNotes}</div>` : ""}
+
                 <div class="section-divider"></div>
 
                 <div class="section-header">The following players are invited to the next tryout session</div>
