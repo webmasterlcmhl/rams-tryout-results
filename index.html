@@ -19,6 +19,12 @@
       font-weight: bold;
       text-transform: uppercase;
     }
+    .timestamp {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 16px;
+      color: #444;
+    }
     .level-box {
       max-width: 900px;
       margin: 30px auto;
@@ -51,68 +57,70 @@
 <body>
 
   <div class="header">Rams Tryout Results</div>
+  <div id="timestamp" class="timestamp">Loading timestamp...</div>
 
   <div id="levels"></div>
 
-<script>
-  const sheetID = "1AOU-uDkA6mpJNOwoxjXUP94GYrZAd1q0OIUp14bwagc";
-  const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
+  <script>
+    const sheetID = "1AOU-uDkA6mpJNOwoxjXUP94GYrZAd1q0OIUp14bwagc";
+    const jsonURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
+    const metaURL = `https://www.googleapis.com/drive/v3/files/${sheetID}?fields=modifiedTime&key=AIzaSyD-FAKE-KEY-REPLACE`;
 
-  fetch(url)
-    .then(res => res.text())
-    .then(text => {
-      const json = JSON.parse(text.substring(47, text.length - 2));
-      const rows = json.table.rows;
-
-      // Extract Google's built-in last updated timestamp
-      const updatedRaw = json.table.lastUpdated;
-      const updatedDate = new Date(updatedRaw);
-      const formatted = updatedDate.toLocaleString("en-CA", {
-        dateStyle: "long",
-        timeStyle: "short"
+    // --- Timestamp Fetch ---
+    fetch(metaURL)
+      .then(res => res.json())
+      .then(meta => {
+        const updated = new Date(meta.modifiedTime);
+        const formatted = updated.toLocaleString("en-CA", {
+          dateStyle: "long",
+          timeStyle: "short"
+        });
+        document.getElementById("timestamp").innerHTML = `Last updated: ${formatted}`;
+      })
+      .catch(() => {
+        document.getElementById("timestamp").innerHTML = "Last updated: unavailable";
       });
 
-      // Display timestamp
-      const header = document.querySelector(".header");
-      header.insertAdjacentHTML(
-        "afterend",
-        `<div style="text-align:center; margin-top:10px; font-size:16px; color:#444;">
-           Last updated: ${formatted}
-         </div>`
-      );
+    // --- Sheet Data Fetch ---
+    fetch(jsonURL)
+      .then(res => res.text())
+      .then(text => {
+        const json = JSON.parse(text.substring(47, text.length - 2));
+        const rows = json.table.rows;
 
-      let levels = {};
+        let levels = {};
 
-      rows.forEach(row => {
-        const jersey = row.c[0]?.v;
-        const status = row.c[1]?.v;
-        const level = row.c[2]?.v;
+        rows.forEach(row => {
+          const jersey = row.c[0]?.v;
+          const status = row.c[1]?.v;
+          const level = row.c[2]?.v;
 
-        if (!jersey || !status || !level) return;
+          if (!jersey || !status || !level) return;
 
-        if (status === "InvitedBack") {
-          if (!levels[level]) levels[level] = [];
-          levels[level].push(jersey);
-        }
-      });
+          if (status === "InvitedBack") {
+            if (!levels[level]) levels[level] = [];
+            levels[level].push(jersey);
+          }
+        });
 
-      const container = document.getElementById("levels");
+        const container = document.getElementById("levels");
 
-      Object.keys(levels).sort().forEach(level => {
-        const jerseys = levels[level].sort((a, b) => a - b);
+        Object.keys(levels).sort().forEach(level => {
+          const jerseys = levels[level].sort((a, b) => a - b);
 
-        const html = `
-          <div class="level-box">
-            <div class="level-title">${level} Invited Back</div>
-            <div class="numbers">
-              ${jerseys.map(num => `<span>${num}</span>`).join("")}
+          const html = `
+            <div class="level-box">
+              <div class="level-title">${level} Invited Back</div>
+              <div class="numbers">
+                ${jerseys.map(num => `<span>${num}</span>`).join("")}
+              </div>
             </div>
-          </div>
-        `;
+          `;
 
-        container.innerHTML += html;
+          container.innerHTML += html;
+        });
       });
-    });
-</script>
+  </script>
+
 </body>
 </html>
