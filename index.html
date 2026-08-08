@@ -90,7 +90,7 @@
       display: inline-block;
       margin: 8px 12px;
       padding: 10px 16px;
-      background: #000000;
+      background: #b00000;   /* RED again */
       color: #fff;
       border-radius: 4px;
       font-weight: bold;
@@ -220,9 +220,12 @@
               .map(j => j.jersey)
               .sort((a, b) => a - b);
 
-            const sessionDate = levels[level][0].nextDate || "";
+            let sessionDate = levels[level][0].nextDate || "";
             const sessionTime = levels[level][0].nextTime || "";
             const sessionLocation = levels[level][0].nextLocation || "";
+
+            // Fix weird CSV formatting like: August 8 " "Saturday
+            sessionDate = sessionDate.replace(/["]/g, "").trim();
 
             const html = `
               <div class="level-box">
