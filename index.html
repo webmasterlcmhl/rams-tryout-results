@@ -237,7 +237,11 @@
                 <h3>Next Session: ${sessionDate} / ${sessionTime} / ${sessionLocation}</h3>
                 <div class="section-divider"></div>
 
-                <h3>Players Playing Tonight</h3>
+                <div class="sitting-header">
+                  The following players are playing in the next tryout session,
+                  ${sessionTime} ${sessionDate} at ${sessionLocation}:
+                </div>
+
                 <div class="numbers">
                   ${
                     playing.length > 0
@@ -245,11 +249,12 @@
                       : `<div class="fallback">No players playing tonight.</div>`
                   }
                 </div>
+
                 <div class="section-divider"></div>
 
                 <div class="sitting-header">
-                  The following players are invited to continue to the next tryout session,
-                  ${sessionTime} ${sessionDate} at ${sessionLocation}:
+                  The following players are invited to continue with the tryout process,
+                  but will not be participating in the session on ${sessionDate}.
                 </div>
 
                 <div class="numbers">
@@ -259,6 +264,7 @@
                       : `<div class="fallback">No players sitting tonight.</div>`
                   }
                 </div>
+
                 <div class="section-divider"></div>
 
                 <div class="closing-note">
