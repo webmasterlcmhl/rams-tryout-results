@@ -24,20 +24,20 @@
       margin: 25px auto 10px auto;
       max-width: 300px;
     }
-.notice {
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  color: #b00000;
-  margin: 20px auto 25px auto;
-  max-width: 900px;
-  background: #fff3f3;
-  padding: 20px;
-  border-radius: 6px;
-  border-left: 8px solid #b00000;
-  border-right: 8px solid #000000;
-  text-transform: uppercase;
-}
+    .notice {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #b00000;
+      margin: 20px auto 25px auto;
+      max-width: 900px;
+      background: #fff3f3;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 8px solid #b00000;
+      border-right: 8px solid #000000;
+      text-transform: uppercase;
+    }
     .timestamp {
       text-align: center;
       margin-top: 10px;
@@ -77,6 +77,18 @@
       text-align: center;
       font-style: italic;
     }
+    .closing-note {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .closing-note a {
+      color: #b00000;
+      font-weight: bold;
+      text-decoration: none;
+    }
   </style>
 </head>
 
@@ -93,7 +105,7 @@
 
   <div id="levels"></div>
 
- <script>
+  <script>
 
     // --- CSV URL ---
     const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
@@ -103,11 +115,9 @@
       .then(res => res.text())
       .then(csv => {
         const rows = csv.split("\n").map(r => r.split(","));
-
-        // Extract header row
         const headers = rows[0].map(h => h.trim());
 
-        // --- Timestamp from sheet (correct placement) ---
+        // --- Timestamp from sheet ---
         const updatedIndex = headers.indexOf("LastUpdated");
         let lastUpdated = "";
 
@@ -118,6 +128,16 @@
         document.getElementById("timestamp").innerHTML =
           `Last updated: ${lastUpdated}`;
 
+        // --- Convenor email lookup ---
+        const convenorEmails = {
+          "U10/U11": "u11convenor@stittsvilleminorhockey.com",
+          "U12/U13": "u13convenor@stittsvilleminorhockey.com",
+          "U14/U15": "u15convenor@stittsvilleminorhockey.com",
+          "U16/U18": "u18convenor@stittsvilleminorhockey.com",
+          "U16/U18 (White)": "u18convenor@stittsvilleminorhockey.com",
+          "U16/U18 (Black)": "u18convenor@stittsvilleminorhockey.com"
+        };
+
         // --- Existing tryout logic ---
         const jerseyIndex = headers.indexOf("JerseyNumber");
         const statusIndex = headers.indexOf("Status");
@@ -125,7 +145,6 @@
 
         let levels = {};
 
-        // Process rows
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
 
@@ -160,6 +179,15 @@
                       : `<div class="fallback">No players invited yet.</div>`
                   }
                 </div>
+
+                <div class="closing-note">
+                  <strong>
+                    Thank you for trying. If your number is not listed above, please report to your house league level convenor:
+                    <a href="mailto:${convenorEmails[level] || 'info@stittsvilleminorhockey.com'}">
+                      ${convenorEmails[level] || 'info@stittsvilleminorhockey.com'}
+                    </a>
+                  </strong>
+                </div>
               </div>
             `;
 
@@ -167,7 +195,10 @@
           });
       });
 
-</script>
+  </script>
+
+</body>
+</html>
 
 
 </body>
