@@ -130,7 +130,11 @@
 
         const container = document.getElementById("levels");
 
-        Object.keys(levels).sort().forEach(level => {
+        Object.keys(levels)
+        .filter(level => level && level.toLowerCase() !== "team level")
+        .sort()
+        .forEach(level => {
+
           const jerseys = levels[level].sort((a, b) => a - b);
 
           const html = `
