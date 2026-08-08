@@ -61,12 +61,12 @@
       text-transform: uppercase;
     }
     .session-info {
-      font-size: 18px;
-      margin-bottom: 20px;
-      color: #333;
-      text-align: center;
-      line-height: 1.4;
-    }
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+    line-height: 1.4;
+}  
     .numbers span {
       display: inline-block;
       margin: 8px 12px;
@@ -215,12 +215,12 @@
             const normalizedLevel = level.trim().replace(/\s+/g, " ");
 
             const invitedBack = levels[level]
-              .filter(j => j.status === "InvitedBack")
+              .filter(j => j.status === "Playing")
               .map(j => j.jersey)
               .sort((a, b) => a - b);
 
             const notPlayingTonight = levels[level]
-              .filter(j => j.status === "NotPlayingTonight")
+              .filter(j => j.status === "Sitting")
               .map(j => j.jersey)
               .sort((a, b) => a - b);
 
