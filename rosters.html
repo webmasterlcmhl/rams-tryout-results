@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Rams Roster Announcements</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background: #b00000;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .logo {
+      display: block;
+      margin: 25px auto 10px auto;
+      max-width: 300px;
+    }
+    .notice {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #b00000;
+      margin: 20px auto 25px auto;
+      max-width: 900px;
+      background: #fff3f3;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 8px solid #b00000;
+      border-right: 8px solid #000000;
+      text-transform: uppercase;
+    }
+    .timestamp {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 16px;
+      color: #444;
+    }
+    .team-box {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 25px;
+      background: #ffffff;
+      border-left: 8px solid #b00000;
+      border-right: 8px solid #000000;
+      border-radius: 6px;
+    }
+    .team-title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #b00000;
+      text-transform: uppercase;
+    }
+    .player {
+      font-size: 20px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .status {
+      font-weight: bold;
+      color: #333;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img src="RAMS-logo.png" alt="Rams Logo" class="logo">
+  <div class="header">Rams Roster Announcements</div>
+
+  <div class="notice">
+    Team placement updates will be posted to this page. Please check back regularly for the latest information.
+  </div>
+
+  <div id="timestamp" class="timestamp"></div>
+
+  <div id="teams"></div>
+
+  <script>
+    // --- Timestamp ---
+    const now = new Date();
+    const formattedNow = now.toLocaleString("en-CA", {
+      dateStyle: "long",
+      timeStyle: "short"
+    });
+    document.getElementById("timestamp").innerHTML = `Last updated: ${formattedNow}`;
+
+    // --- CSV URL for Rosters tab ---
+    const csvURL = "YOUR_ROSTERS_CSV_LINK_HERE";
+
+    // --- Fetch CSV ---
+    fetch(csvURL)
+      .then(res => res.text())
+      .then(csv => {
+        const rows = csv.split("\n").map(r => r.split(","));
+
+        const headers = rows[0].map(h => h.trim());
+
+        const teamIndex = headers.indexOf("Team");
+        const nameIndex = headers.indexOf("PlayerName");
+        const statusIndex = headers.indexOf("Status");
+
+        let teams = {};
+
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+
+          const team = row[teamIndex]?.trim();
+          const name = row[nameIndex]?.trim();
+          const status = row[statusIndex]?.trim();
+
+          if (!team || !name || !status) continue;
+
+          if (!teams[team]) teams[team] = [];
+
+          teams[team].push({ name, status });
+        }
+
+        const container = document.getElementById("teams");
+
+        Object.keys(teams)
+          .filter(team => team && team.trim() !== "")
+          .sort()
+          .forEach(team => {
+            const players = teams[team];
+
+            const html = `
+              <div class="team-box">
+                <div class="team-title">${team} Roster</div>
+                ${players
+                  .map(
+                    p =>
+                      `<div class="player">${p.name} <span class="status">— ${p.status}</span></div>`
+                  )
+                  .join("")}
+              </div>
+            `;
+
+            container.innerHTML += html;
+          });
+      });
+  </script>
+
+</body>
+</html>
