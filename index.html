@@ -123,23 +123,24 @@
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
 
     const convenorEmails = {
-      "U10/U11": "u11convenor@stittsvilleminorhockey.com",
-      "U12/U13": "u13convenor@stittsvilleminorhockey.com",
-      "U14/U15": "u15convenor@stittsvilleminorhockey.com",
-      "U16/U18": "u18convenor@stittsvilleminorhockey.com"
+      "U11": "u11convenor@stittsvilleminorhockey.com",
+      "U13": "u13convenor@stittsvilleminorhockey.com",
+      "U15": "u15convenor@stittsvilleminorhockey.com",
+      "U18": "u18convenor@stittsvilleminorhockey.com"
     };
 
-    function findConvenorEmail(levelName) {
+    function getHouseLeagueInfo(levelName) {
       const age = levelName.match(/U(\d+)/);
-      if (!age) return "";
+      if (!age) return { hlLevel: "", email: "" };
+
       const num = parseInt(age[1]);
 
-      if (num === 10 || num === 11) return convenorEmails["U10/U11"];
-      if (num === 12 || num === 13) return convenorEmails["U12/U13"];
-      if (num === 14 || num === 15) return convenorEmails["U14/U15"];
-      if (num >= 16 && num <= 18) return convenorEmails["U16/U18"];
+      if (num === 10 || num === 11) return { hlLevel: "U11", email: convenorEmails["U11"] };
+      if (num === 12 || num === 13) return { hlLevel: "U13", email: convenorEmails["U13"] };
+      if (num === 14 || num === 15) return { hlLevel: "U15", email: convenorEmails["U15"] };
+      if (num >= 16 && num <= 18) return { hlLevel: "U18", email: convenorEmails["U18"] };
 
-      return "";
+      return { hlLevel: "", email: "" };
     }
 
     fetch(csvURL)
@@ -189,7 +190,7 @@
           .filter(level => level.trim() !== "" && level.toLowerCase() !== "teamlevel")
           .sort()
           .forEach(level => {
-            const convenorEmail = findConvenorEmail(level);
+            const { hlLevel, email: convenorEmail } = getHouseLeagueInfo(level);
 
             const playing = levels[level]
               .filter(j => j.status === "Playing")
@@ -234,7 +235,7 @@
 
                 <div class="closing-note">
                   Thank you to everyone who participated in the Rams competitive tryout process.<br>
-                  Those not listed above should report to the ${level} SMHA house league sort-out process.<br><br>
+                  Those not listed above should report to the ${hlLevel} SMHA house league sort-out process.<br><br>
                   House League Convenor Contact:<br>
                   ${
                     convenorEmail
