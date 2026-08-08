@@ -167,6 +167,10 @@
           .filter(level => level && level.trim() !== "" && level.toLowerCase() !== "teamlevel")
           .sort()
           .forEach(level => {
+
+            // Normalize level name for lookup
+            const normalizedLevel = level.trim().replace(/\s+/g, " ");
+
             const jerseys = levels[level].sort((a, b) => a - b);
 
             const html = `
@@ -183,9 +187,11 @@
                 <div class="closing-note">
                   <strong>
                     Thank you for trying. If your number is not listed above, please report to your house league level convenor:
-                    <a href="mailto:${convenorEmails[level] || 'info@stittsvilleminorhockey.com'}">
-                      ${convenorEmails[level] || 'info@stittsvilleminorhockey.com'}
-                    </a>
+                    ${
+                      convenorEmails[normalizedLevel]
+                        ? `<a href="mailto:${convenorEmails[normalizedLevel]}">${convenorEmails[normalizedLevel]}</a>`
+                        : ""
+                    }
                   </strong>
                 </div>
               </div>
@@ -200,6 +206,3 @@
 </body>
 </html>
 
-
-</body>
-</html>
