@@ -87,17 +87,16 @@
       font-size: 16px;
       color: #333;
       margin: 20px 0 10px 0;
-      text-align: center;
+      text-align: left;
       font-weight: 600;
     }
     .closing-note {
-    font-size: 15px;
-    color: #333;
-    text-align: left;
-    line-height: 1.5;
-    margin-top: 25px;
-  }
-
+      font-size: 15px;
+      color: #333;
+      text-align: left;
+      line-height: 1.6;
+      margin-top: 25px;
+    }
     .closing-note a {
       color: #b00000;
       font-weight: bold;
@@ -123,6 +122,26 @@
     const csvURL =
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
 
+    const convenorEmails = {
+      "U10/U11": "u11convenor@stittsvilleminorhockey.com",
+      "U12/U13": "u13convenor@stittsvilleminorhockey.com",
+      "U14/U15": "u15convenor@stittsvilleminorhockey.com",
+      "U16/U18": "u18convenor@stittsvilleminorhockey.com"
+    };
+
+    function findConvenorEmail(levelName) {
+      const age = levelName.match(/U(\d+)/);
+      if (!age) return "";
+      const num = parseInt(age[1]);
+
+      if (num === 10 || num === 11) return convenorEmails["U10/U11"];
+      if (num === 12 || num === 13) return convenorEmails["U12/U13"];
+      if (num === 14 || num === 15) return convenorEmails["U14/U15"];
+      if (num >= 16 && num <= 18) return convenorEmails["U16/U18"];
+
+      return "";
+    }
+
     fetch(csvURL)
       .then(res => res.text())
       .then(csv => {
@@ -130,21 +149,9 @@
         const headers = rows[0].map(h => h.trim());
 
         const updatedIndex = headers.indexOf("LastUpdated");
-        let lastUpdated = "";
-        if (updatedIndex !== -1 && rows.length > 1) {
-          lastUpdated = rows[1][updatedIndex].trim();
-        }
+        let lastUpdated = rows[1]?.[updatedIndex]?.trim() || "";
         document.getElementById("timestamp").innerHTML =
           `Last updated: ${lastUpdated}`;
-
-        const convenorEmails = {
-          "U10/U11": "u11convenor@stittsvilleminorhockey.com",
-          "U12/U13": "u13convenor@stittsvilleminorhockey.com",
-          "U14/U15": "u15convenor@stittsvilleminorhockey.com",
-          "U16/U18": "u18convenor@stittsvilleminorhockey.com",
-          "U16/U18 (White)": "u18convenor@stittsvilleminorhockey.com",
-          "U16/U18 (Black)": "u18convenor@stittsvilleminorhockey.com"
-        };
 
         const jerseyIndex = headers.indexOf("JerseyNumber");
         const statusIndex = headers.indexOf("Status");
@@ -179,17 +186,10 @@
         const container = document.getElementById("levels");
 
         Object.keys(levels)
-          .filter(level => level && level.trim() !== "" && level.toLowerCase() !== "teamlevel")
+          .filter(level => level.trim() !== "" && level.toLowerCase() !== "teamlevel")
           .sort()
           .forEach(level => {
-            const normalizedLevel = level.trim().replace(/\s+/g, " ");
-            const convenorEmail =
-              convenorEmails[normalizedLevel] ||
-              Object.keys(convenorEmails).find(key => normalizedLevel.includes(key))
-                ? convenorEmails[
-                    Object.keys(convenorEmails).find(key => normalizedLevel.includes(key))
-                  ]
-                : "";
+            const convenorEmail = findConvenorEmail(level);
 
             const playing = levels[level]
               .filter(j => j.status === "Playing")
@@ -211,7 +211,7 @@
 
                 <h3>NEXT SESSION: ${sessionDate} / ${sessionTime} / ${sessionLocation}</h3>
 
-                <h3>Players Players invited to continue</h3>
+                <h3>Players Playing Tonight</h3>
                 <div class="numbers">
                   ${
                     playing.length > 0
@@ -232,18 +232,15 @@
                   }
                 </div>
 
-              <div class="closing-note">
+                <div class="closing-note">
                   Thank you to everyone who participated in the Rams competitive tryout process.<br>
                   Those not listed above should report to the ${level} SMHA house league sort-out process.<br><br>
-                  House League Convenor Contact: 
+                  House League Convenor Contact:<br>
                   ${
                     convenorEmail
                       ? `<a href="mailto:${convenorEmail}">${convenorEmail}</a>`
                       : "Email not available"
                   }
-                </div>
-
-                  </strong>
                 </div>
               </div>
             `;
