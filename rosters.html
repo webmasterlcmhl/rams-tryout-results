@@ -65,10 +65,12 @@
       padding: 8px 0;
       border-bottom: 1px solid #eee;
     }
-    .status {
-      font-weight: bold;
-      color: #333;
-      margin-left: 10px;
+    .closing-note {
+      margin-top: 20px;
+      font-size: 18px;
+      font-style: italic;
+      color: #444;
+      text-align: center;
     }
   </style>
 </head>
@@ -108,7 +110,6 @@
 
         const teamIndex = headers.indexOf("Team");
         const nameIndex = headers.indexOf("PlayerName");
-        const statusIndex = headers.indexOf("Status");
 
         let teams = {};
 
@@ -117,13 +118,12 @@
 
           const team = row[teamIndex]?.trim();
           const name = row[nameIndex]?.trim();
-          const status = row[statusIndex]?.trim();
 
-          if (!team || !name || !status) continue;
+          if (!team || !name) continue;
 
           if (!teams[team]) teams[team] = [];
 
-          teams[team].push({ name, status });
+          teams[team].push(name);
         }
 
         const container = document.getElementById("teams");
@@ -136,13 +136,11 @@
 
             const html = `
               <div class="team-box">
-                <div class="team-title">${team} Roster</div>
-                ${players
-                  .map(
-                    p =>
-                      `<div class="player">${p.name} <span class="status">— ${p.status}</span></div>`
-                  )
-                  .join("")}
+                <div class="team-title">${team} - Final Roster</div>
+                ${players.map(p => `<div class="player">${p}</div>`).join("")}
+                <div class="closing-note">
+                  We thank everyone for participating. If your name is not listed above, please report back to your house league convenor.
+                </div>
               </div>
             `;
 
