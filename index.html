@@ -4,137 +4,35 @@
   <meta charset="UTF-8">
   <title>Rams Tryout Results</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 0;
-    }
-
-    .header {
-      background: #000000;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    .logo {
-      display: block;
-      margin: 25px auto 10px auto;
-      max-width: 300px;
-    }
-
-    .notice {
-      text-align: center;
-      font-size: 22px;
-      font-weight: 700;
-      color: #000000;
-      margin: 20px auto 25px auto;
-      max-width: 900px;
-      background: #fff3f3;
-      padding: 20px;
-      border-radius: 6px;
-      border-left: 8px solid #000000;
-      border-right: 8px solid #b00000;
-      text-transform: uppercase;
-    }
-
-    .timestamp {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 16px;
-      color: #444;
-    }
-
-    .level-box {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 25px;
-      background: #ffffff;
-      border-left: 8px solid #000000;
-      border-right: 8px solid #b00000;
-      border-radius: 6px;
-      text-align: left;
-    }
-
-    .level-title {
-      font-size: 26px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      color: #000000;
-      text-transform: uppercase;
-    }
-
-    .section-divider {
-      border-top: 1px solid #b00000;
-      margin: 25px 0;
-    }
-
-    .section-header {
-      font-size: 18px;
-      color: #000000;
-      font-weight: bold;
-      margin-top: 20px;
-      margin-bottom: 10px;
-    }
-
-    .numbers {
-      margin-left: 10px;
-      margin-bottom: 20px;
-    }
-
-    .numbers span {
-      display: inline-block;
-      margin: 8px 12px;
-      padding: 10px 16px;
-      background: #b00000;
-      color: #fff;
-      border-radius: 4px;
-      font-weight: bold;
-      font-size: 20px;
-    }
-
-    .fallback {
-      font-size: 18px;
-      color: #666;
-      padding: 10px 0;
-      font-style: italic;
-    }
-
-    .closing-note {
-      font-size: 14px;
-      color: #555;
-      line-height: 1.6;
-      margin-top: 30px;
-    }
-
-    .closing-note a {
-      color: #000000;
-      font-weight: bold;
-      text-decoration: none;
-    }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+    .header { background: #000; color: #fff; padding: 20px; text-align: center; font-size: 28px; font-weight: bold; text-transform: uppercase; }
+    .logo { display: block; margin: 25px auto 10px auto; max-width: 300px; }
+    .notice { text-align: center; font-size: 22px; font-weight: 700; color: #000; margin: 20px auto 25px auto; max-width: 900px; background: #fff3f3; padding: 20px; border-radius: 6px; border-left: 8px solid #000; border-right: 8px solid #b00000; text-transform: uppercase; }
+    .timestamp { text-align: center; margin-top: 10px; font-size: 16px; color: #444; }
+    .level-box { max-width: 900px; margin: 30px auto; padding: 25px; background: #fff; border-left: 8px solid #000; border-right: 8px solid #b00000; border-radius: 6px; }
+    .level-title { font-size: 26px; font-weight: bold; margin-bottom: 15px; color: #000; text-transform: uppercase; }
+    .section-divider { border-top: 1px solid #b00000; margin: 25px 0; }
+    .section-header { font-size: 18px; color: #000; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
+    .numbers { margin-left: 10px; margin-bottom: 20px; }
+    .numbers span { display: inline-block; margin: 8px 12px; padding: 10px 16px; background: #b00000; color: #fff; border-radius: 4px; font-weight: bold; font-size: 20px; }
+    .fallback { font-size: 18px; color: #666; padding: 10px 0; font-style: italic; }
+    .closing-note { font-size: 14px; color: #555; line-height: 1.6; margin-top: 30px; }
+    .closing-note a { color: #000; font-weight: bold; text-decoration: none; }
   </style>
 </head>
 
 <body>
 
-  <img src="RAMS-logo.png" alt="Rams Logo" class="logo">
+  <img src="RAMS-logo.png" class="logo">
   <div class="header">Rams Tryout Updates</div>
 
-  <div class="notice">
-    Tryout updates will be posted to this page. Please check back regularly for the latest information.
-  </div>
+  <div class="notice">Tryout updates will be posted to this page. Please check back regularly for the latest information.</div>
 
   <div id="timestamp" class="timestamp"></div>
-
   <div id="levels"></div>
 
   <script>
-    const csvURL =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
+    const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
 
     const convenorEmails = {
       "U11": "u11convenor@stittsvilleminorhockey.com",
@@ -146,15 +44,11 @@
     function getHouseLeagueInfo(levelName) {
       const age = levelName.match(/U(\d+)/);
       if (!age) return { hlLevel: "", email: "" };
-
       const num = parseInt(age[1]);
-
-      if (num === 10 || num === 11) return { hlLevel: "U11", email: convenorEmails["U11"] };
-      if (num === 12 || num === 13) return { hlLevel: "U13", email: convenorEmails["U13"] };
-      if (num === 14 || num === 15) return { hlLevel: "U15", email: convenorEmails["U15"] };
-      if (num >= 16 && num <= 18) return { hlLevel: "U18", email: convenorEmails["U18"] };
-
-      return { hlLevel: "", email: "" };
+      if (num <= 11) return { hlLevel: "U11", email: convenorEmails["U11"] };
+      if (num <= 13) return { hlLevel: "U13", email: convenorEmails["U13"] };
+      if (num <= 15) return { hlLevel: "U15", email: convenorEmails["U15"] };
+      return { hlLevel: "U18", email: convenorEmails["U18"] };
     }
 
     fetch(csvURL)
@@ -163,106 +57,83 @@
         const rows = csv.split("\n").map(r => r.split(","));
         const headers = rows[0].map(h => h.trim());
 
-        const updatedIndex = headers.indexOf("LastUpdated");
-        let lastUpdated = rows[1]?.[updatedIndex]?.trim() || "";
-        document.getElementById("timestamp").innerHTML =
-          `Last updated: ${lastUpdated}`;
+        const idx = {
+          jersey: headers.indexOf("JerseyNumber"),
+          status: headers.indexOf("Status"),
+          level: headers.indexOf("TeamLevel"),
+          notes: headers.indexOf("Notes"),
+          updated: headers.indexOf("LastUpdated"),
+          date: headers.indexOf("NextSessionDate"),
+          time: headers.indexOf("NextSessionTime"),
+          location: headers.indexOf("NextSessionLocation")
+        };
 
-        const jerseyIndex = headers.indexOf("JerseyNumber");
-        const statusIndex = headers.indexOf("Status");
-        const levelIndex = headers.indexOf("TeamLevel");
-        const nextDateIndex = headers.indexOf("NextSessionDate");
-        const nextTimeIndex = headers.indexOf("NextSessionTime");
-        const nextLocationIndex = headers.indexOf("NextSessionLocation");
+        document.getElementById("timestamp").innerHTML =
+          "Last updated: " + (rows[1]?.[idx.updated] || "").trim();
 
         let levels = {};
 
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
-          const jersey = row[jerseyIndex]?.trim();
-          const status = row[statusIndex]?.trim();
-          const level = row[levelIndex]?.trim();
-          const nextDate = row[nextDateIndex]?.trim();
-          const nextTime = row[nextTimeIndex]?.trim();
-          const nextLocation = row[nextLocationIndex]?.trim();
+
+          const jersey = row[idx.jersey]?.trim();
+          const status = row[idx.status]?.trim();
+          const level = row[idx.level]?.trim();
 
           if (!jersey || !status || !level) continue;
-          if (!levels[level]) levels[level] = [];
 
-          levels[level].push({
-            jersey,
-            status,
-            nextDate,
-            nextTime,
-            nextLocation
-          });
+          // REBUILD DATE + LOCATION FROM SPLIT CSV FIELDS
+          let dateParts = [];
+          let time = "";
+          let locationParts = [];
+
+          for (let c = idx.date; c < row.length; c++) {
+            const cell = row[c]?.trim().replace(/"/g, "");
+            if (!cell) continue;
+
+            if (cell.match(/(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/)) {
+              dateParts.push(cell);
+            } else if (cell.match(/(January|February|March|April|May|June|July|August|September|October|November|December)/)) {
+              dateParts.push(cell);
+            } else if (cell.match(/\d{1,2}:\d{2}/)) {
+              time = cell;
+            } else {
+              locationParts.push(cell);
+            }
+          }
+
+          const fullDate = dateParts.join(", ");
+          const fullLocation = locationParts.join(" ").trim() || "TBD";
+
+          if (!levels[level]) levels[level] = [];
+          levels[level].push({ jersey, status, fullDate, time, fullLocation });
         }
 
         const container = document.getElementById("levels");
 
         Object.keys(levels)
-          .filter(level =>
-            level.trim() !== "" &&
-            level.toLowerCase() !== "teamlevel" &&
-            !["invitedback", "placeholder", "test"].includes(level.toLowerCase())
-          )
+          .filter(level => level && !["invitedback", "placeholder", "test"].includes(level.toLowerCase()))
           .sort()
           .forEach(level => {
-            const { hlLevel, email: convenorEmail } = getHouseLeagueInfo(level);
+            const { hlLevel, email } = getHouseLeagueInfo(level);
 
-            const playing = levels[level]
-              .filter(j => j.status === "Playing")
-              .map(j => j.jersey)
-              .sort((a, b) => a - b);
+            const playing = levels[level].filter(j => j.status === "Playing").map(j => j.jersey).sort((a, b) => a - b);
+            const sitting = levels[level].filter(j => j.status === "Sitting").map(j => j.jersey).sort((a, b) => a - b);
 
-            const sitting = levels[level]
-              .filter(j => j.status === "Sitting")
-              .map(j => j.jersey)
-              .sort((a, b) => a - b);
+            const sessionDate = levels[level][0].fullDate;
+            const sessionTime = levels[level][0].time;
+            const sessionLocation = levels[level][0].fullLocation;
 
-            let sessionDate = levels[level][0].nextDate || "";
-            let sessionTime = levels[level][0].nextTime || "";
-            let sessionLocation = levels[level][0].nextLocation || "";
-
-            // FINAL DATE RECONSTRUCTION
-            if (!sessionDate.includes(",")) {
-              const parts = sessionDate.split(" ");
-              if (parts.length === 1 && levels[level][1]?.nextDate) {
-                sessionDate = parts[0] + ", " + levels[level][1].nextDate;
-              }
-            }
-
-            sessionDate = sessionDate
-              .replace(/"\s*"/g, " ")
-              .replace(/["]/g, "")
-              .replace(/\s{2,}/g, " ")
-              .trim();
-
-            sessionLocation = sessionLocation
-              .replace(/["]/g, "")
-              .trim();
-
-            if (!sessionLocation) sessionLocation = "TBD";
-
-            const html = `
+            container.innerHTML += `
               <div class="level-box">
                 <div class="level-title">${level} Tryout Update</div>
                 <div class="section-divider"></div>
 
-                <div class="section-header">
-                  The following players are invited to the next tryout session
-                </div>
-
-                <div class="section-header">
-                  Next Session: ${sessionTime} ${sessionDate} at ${sessionLocation}
-                </div>
+                <div class="section-header">The following players are invited to the next tryout session</div>
+                <div class="section-header">Next Session: ${sessionTime} ${sessionDate} at ${sessionLocation}</div>
 
                 <div class="numbers">
-                  ${
-                    playing.length > 0
-                      ? playing.map(num => `<span>${num}</span>`).join("")
-                      : `<div class="fallback">No players playing tonight.</div>`
-                  }
+                  ${playing.length ? playing.map(n => `<span>${n}</span>`).join("") : `<div class="fallback">No players playing tonight.</div>`}
                 </div>
 
                 <div class="section-divider"></div>
@@ -273,26 +144,18 @@
                 </div>
 
                 <div class="numbers">
-                  ${
-                    sitting.length > 0
-                      ? sitting.map(num => `<span>${num}</span>`).join("")
-                      : `<div class="fallback">No players sitting tonight.</div>`
-                  }
+                  ${sitting.length ? sitting.map(n => `<span>${n}</span>`).join("") : `<div class="fallback">No players sitting tonight.</div>`}
                 </div>
 
                 <div class="section-divider"></div>
 
                 <div class="closing-note">
-                  Thank you to everyone who participated in the Rams competitive tryout process. Those not listed above should report to the ${hlLevel} SMHA house league sort-out process.<br><br>
-                  ${
-                    convenorEmail
-                      ? `<a href="mailto:${convenorEmail}">${convenorEmail}</a>`
-                      : "Email not available"
-                  }
+                  Thank you to everyone who participated in the Rams competitive tryout process.
+                  Those not listed above should report to the ${hlLevel} SMHA house league sort-out process.<br><br>
+                  <a href="mailto:${email}">${email}</a>
                 </div>
               </div>
             `;
-            container.innerHTML += html;
           });
       });
   </script>
