@@ -90,7 +90,7 @@
       display: inline-block;
       margin: 8px 12px;
       padding: 10px 16px;
-      background: #b00000;   /* RED again */
+      background: #b00000;
       color: #fff;
       border-radius: 4px;
       font-weight: bold;
@@ -221,16 +221,28 @@
               .sort((a, b) => a - b);
 
             let sessionDate = levels[level][0].nextDate || "";
-            const sessionTime = levels[level][0].nextTime || "";
-            const sessionLocation = levels[level][0].nextLocation || "";
+            let sessionTime = levels[level][0].nextTime || "";
+            let sessionLocation = levels[level][0].nextLocation || "";
 
-            // Fix weird CSV formatting like: August 8 " "Saturday
+            // FINAL DATE RECONSTRUCTION
+            if (!sessionDate.includes(",")) {
+              const parts = sessionDate.split(" ");
+              if (parts.length === 1 && levels[level][1]?.nextDate) {
+                sessionDate = parts[0] + ", " + levels[level][1].nextDate;
+              }
+            }
+
             sessionDate = sessionDate
-            .replace(/"\s*"/g, " ")     // remove " "
-            .replace(/["]/g, "")        // remove any remaining quotes
-            .replace(/\s{2,}/g, " ")    // collapse double spaces
-            .trim();
+              .replace(/"\s*"/g, " ")
+              .replace(/["]/g, "")
+              .replace(/\s{2,}/g, " ")
+              .trim();
 
+            sessionLocation = sessionLocation
+              .replace(/["]/g, "")
+              .trim();
+
+            if (!sessionLocation) sessionLocation = "TBD";
 
             const html = `
               <div class="level-box">
