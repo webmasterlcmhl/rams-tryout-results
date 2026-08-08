@@ -91,12 +91,13 @@
       font-weight: 600;
     }
     .closing-note {
-      font-size: 15px;
-      color: #333;
-      text-align: center;
-      line-height: 1.5;
-      margin-top: 25px;
-    }
+    font-size: 15px;
+    color: #333;
+    text-align: left;
+    line-height: 1.5;
+    margin-top: 25px;
+  }
+
     .closing-note a {
       color: #b00000;
       font-weight: bold;
@@ -231,16 +232,17 @@
                   }
                 </div>
 
-                <div class="closing-note">
-                  <strong>
-                    Thank you to everyone who participated in the Rams competitive tryout process.<br>
-                    Those not listed above should report to the ${level} SMHA house league sort-out process.<br><br>
-                    House League Convenor Contact:
-                    ${
-                      convenorEmail
-                        ? `<a href="mailto:${convenorEmail}">${convenorEmail}</a>`
-                        : "Email not available"
-                    }
+              <div class="closing-note">
+                  Thank you to everyone who participated in the Rams competitive tryout process.<br>
+                  Those not listed above should report to the ${level} SMHA house league sort-out process.<br><br>
+                  House League Convenor Contact: 
+                  ${
+                    convenorEmail
+                      ? `<a href="mailto:${convenorEmail}">${convenorEmail}</a>`
+                      : "Email not available"
+                  }
+                </div>
+
                   </strong>
                 </div>
               </div>
