@@ -80,7 +80,7 @@
 
 <body>
 
-  <img src="logo.png" alt="Rams Logo" class="logo">
+  <img src="RAMS-logo.png" alt="Rams Logo" class="logo">
   <div class="header">Rams Tryout Results</div>
 
   <div class="notice">
@@ -92,7 +92,7 @@
   <div id="levels"></div>
 
   <script>
-    // --- Generate our own reliable timestamp ---
+    // --- Reliable timestamp ---
     const now = new Date();
     const formattedNow = now.toLocaleString("en-CA", {
       dateStyle: "long",
@@ -100,14 +100,66 @@
     });
     document.getElementById("timestamp").innerHTML = `Last updated: ${formattedNow}`;
 
-    // --- Sheet Data ---
-    const sheetID = "1AOU-uDkA6mpJNOwoxjXUP94GYrZAd1q0OIUp14bwagc";
-    const jsonURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
+    // --- CSV URL ---
+    const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
 
-    fetch(jsonURL)
+    // --- Fetch CSV ---
+    fetch(csvURL)
       .then(res => res.text())
-      .then(text => {
-        const json = JSON.parse(text.substring(47, text.length - 2));
-        const rows = json.table
+      .then(csv => {
+        const rows = csv.split("\n").map(r => r.split(","));
+
+        // Extract header row
+        const headers = rows[0].map(h => h.trim());
+
+        const jerseyIndex = headers.indexOf("JerseyNumber");
+        const statusIndex = headers.indexOf("Status");
+        const levelIndex = headers.indexOf("TeamLevel");
+
+        let levels = {};
+
+        // Process rows
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+
+          const jersey = row[jerseyIndex]?.trim();
+          const status = row[statusIndex]?.trim();
+          const level = row[levelIndex]?.trim();
+
+          if (!jersey || !status || !level) continue;
+
+          if (!levels[level]) levels[level] = [];
+
+          if (status === "InvitedBack") {
+            levels[level].push(jersey);
+          }
+        }
+
+        const container = document.getElementById("levels");
+
+        Object.keys(levels)
+          .filter(level => level && level.trim() !== "" && level.toLowerCase() !== "teamlevel")
+          .sort()
+          .forEach(level => {
+            const jerseys = levels[level].sort((a, b) => a - b);
+
+            const html = `
+              <div class="level-box">
+                <div class="level-title">${level} Invited Back</div>
+                <div class="numbers">
+                  ${
+                    jerseys.length > 0
+                      ? jerseys.map(num => `<span>${num}</span>`).join("")
+                      : `<div class="fallback">No players invited yet.</div>`
+                  }
+                </div>
+              </div>
+            `;
+
+            container.innerHTML += html;
+          });
+      });
+  </script>
+
 </body>
 </html>
