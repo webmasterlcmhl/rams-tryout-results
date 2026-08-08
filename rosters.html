@@ -1,138 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Final Rosters</title>
-
+  <meta charset="UTF-8">
+  <title>Rams Roster Announcements</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 40px;
-      background: #f7f7f7;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
     }
-
-    h1 {
+    .header {
+      background: #b00000;
+      color: white;
+      padding: 20px;
       text-align: center;
-      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
     }
-
-    #timestamp {
+    .logo {
+      display: block;
+      margin: 25px auto 10px auto;
+      max-width: 300px;
+    }
+    .notice {
       text-align: center;
-      font-size: 14px;
-      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #b00000;
+      margin: 20px auto 25px auto;
+      max-width: 900px;
+      background: #fff3f3;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 8px solid #b00000;
+      border-right: 8px solid #000000;
+      text-transform: uppercase;
+    }
+    .timestamp {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 16px;
       color: #444;
     }
-
-    .team-block {
-      background: #fff;
-      padding: 20px;
-      margin-bottom: 25px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .team-box {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 25px;
+      background: #ffffff;
+      border-left: 8px solid #b00000;
+      border-right: 8px solid #000000;
+      border-radius: 6px;
     }
-
     .team-title {
-      font-size: 20px;
+      font-size: 26px;
       font-weight: bold;
-      margin-bottom: 10px;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 5px;
+      margin-bottom: 15px;
+      color: #b00000;
+      text-transform: uppercase;
     }
-
     .player {
-      padding: 4px 0;
-      font-size: 16px;
+      font-size: 20px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
     }
-
     .closing-note {
-      margin-top: 40px;
-      text-align: center;
+      margin-top: 20px;
       font-size: 18px;
+      font-style: italic;
+      color: #444;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Final Team Rosters</h1>
-  <div id="timestamp">Loading last updated time…</div>
-  <div id="rosters"></div>
+  <img src="RAMS-logo.png" alt="Rams Logo" class="logo">
+  <div class="header">Rams Roster Announcements</div>
 
-  <div class="closing-note">
-    <strong>Congrats to all players selected to the team.</strong>
-  </div>
+  <div id="timestamp" class="timestamp"></div>
+
+  <div id="teams"></div>
 
   <script>
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?gid=1148910874&single=true&output=csv";
+    // --- Timestamp ---
+    const now = new Date();
+    const formattedNow = now.toLocaleString("en-CA", {
+      dateStyle: "long",
+      timeStyle: "short"
+    });
+    document.getElementById("timestamp").innerHTML = `Last updated: ${formattedNow}`;
 
-    async function loadCSV() {
-      try {
-        const response = await fetch(csvUrl);
-        const text = await response.text();
+    // --- CSV URL for Rosters tab ---
+    const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?gid=1148910874&single=true&output=csv";
 
-        const rows = text.trim().split("\n").map(r => r.split(","));
-        const headers = rows[0];
+    // --- Fetch CSV ---
+    fetch(csvURL)
+      .then(res => res.text())
+      .then(csv => {
+        const rows = csv.split("\n").map(r => r.split(","));
+
+        const headers = rows[0].map(h => h.trim());
 
         const teamIndex = headers.indexOf("Team");
         const nameIndex = headers.indexOf("PlayerName");
-        const updatedIndex = headers.indexOf("LastUpdated");
 
-        // --- Timestamp from sheet ---
-        let lastUpdated = "Unavailable";
-        if (updatedIndex !== -1 && rows.length > 1) {
-          lastUpdated = rows[1][updatedIndex].trim();
-        }
-        document.getElementById("timestamp").innerHTML = `Last updated: ${lastUpdated}`;
-
-        // --- Build roster groups ---
-        const teams = {};
+        let teams = {};
 
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
 
           const team = row[teamIndex]?.trim();
-          const player = row[nameIndex]?.trim();
+          const name = row[nameIndex]?.trim();
 
-          if (!team || !player) continue;
+          if (!team || !name) continue;
 
           if (!teams[team]) teams[team] = [];
-          teams[team].push(player);
+
+          teams[team].push(name);
         }
 
-        // --- Render HTML ---
-        const container = document.getElementById("rosters");
-        container.innerHTML = "";
+        const container = document.getElementById("teams");
 
-        Object.keys(teams).forEach(team => {
-          const block = document.createElement("div");
-          block.className = "team-block";
+        Object.keys(teams)
+          .filter(team => team && team.trim() !== "")
+          .sort()
+          .forEach(team => {
+            const players = teams[team];
 
-          const title = document.createElement("div");
-          title.className = "team-title";
-          title.textContent = team;
+            const html = `
+              <div class="team-box">
+                <div class="team-title">${team} - Final Roster</div>
+                ${players.map(p => `<div class="player">${p}</div>`).join("")}
+<div class="closing-note">
+  Congratulations to all players selected to the team. We look forward to a great season ahead.
+</div>
 
-          block.appendChild(title);
+                  <div class="closing-note">
+                    <strong>  Congratulations to all players selected to the team. We look forward to a great season ahead. </strong>
+                  </div>
+              </div>
+            `;
 
-          teams[team].forEach(player => {
-            const p = document.createElement("div");
-            p.className = "player";
-            p.textContent = player;
-            block.appendChild(p);
+            container.innerHTML += html;
           });
-
-          container.appendChild(block);
-        });
-
-      } catch (err) {
-        document.getElementById("timestamp").innerHTML = "Error loading data.";
-        console.error("Roster load error:", err);
-      }
-    }
-
-    loadCSV();
+      });
   </script>
 
 </body>
-</html>
 </html>
