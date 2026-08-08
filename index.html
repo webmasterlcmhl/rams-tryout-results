@@ -12,7 +12,7 @@
     }
 
     .header {
-      background: #b00000;
+      background: #000000;
       color: white;
       padding: 20px;
       text-align: center;
@@ -31,14 +31,14 @@
       text-align: center;
       font-size: 22px;
       font-weight: 700;
-      color: #b00000;
+      color: #000000;
       margin: 20px auto 25px auto;
       max-width: 900px;
       background: #fff3f3;
       padding: 20px;
       border-radius: 6px;
-      border-left: 8px solid #b00000;
-      border-right: 8px solid #000000;
+      border-left: 8px solid #000000;
+      border-right: 8px solid #b00000;
       text-transform: uppercase;
     }
 
@@ -54,8 +54,8 @@
       margin: 30px auto;
       padding: 25px;
       background: #ffffff;
-      border-left: 8px solid #b00000;
-      border-right: 8px solid #000000;
+      border-left: 8px solid #000000;
+      border-right: 8px solid #b00000;
       border-radius: 6px;
       text-align: left;
     }
@@ -64,22 +64,21 @@
       font-size: 26px;
       font-weight: bold;
       margin-bottom: 15px;
-      color: #b00000;
+      color: #000000;
       text-transform: uppercase;
     }
 
     .section-divider {
-      border-top: 1px solid #ddd;
+      border-top: 1px solid #b00000;
       margin: 25px 0;
     }
 
     .section-header {
       font-size: 18px;
-      color: #b00000;
+      color: #000000;
       font-weight: bold;
       margin-top: 20px;
       margin-bottom: 10px;
-      text-transform: none;
     }
 
     .numbers {
@@ -91,7 +90,7 @@
       display: inline-block;
       margin: 8px 12px;
       padding: 10px 16px;
-      background: #b00000;
+      background: #000000;
       color: #fff;
       border-radius: 4px;
       font-weight: bold;
@@ -113,7 +112,7 @@
     }
 
     .closing-note a {
-      color: #b00000;
+      color: #000000;
       font-weight: bold;
       text-decoration: none;
     }
@@ -202,7 +201,11 @@
         const container = document.getElementById("levels");
 
         Object.keys(levels)
-          .filter(level => level.trim() !== "" && level.toLowerCase() !== "teamlevel")
+          .filter(level =>
+            level.trim() !== "" &&
+            level.toLowerCase() !== "teamlevel" &&
+            !["invitedback", "placeholder", "test"].includes(level.toLowerCase())
+          )
           .sort()
           .forEach(level => {
             const { hlLevel, email: convenorEmail } = getHouseLeagueInfo(level);
@@ -226,14 +229,13 @@
                 <div class="level-title">${level} Tryout Update</div>
                 <div class="section-divider"></div>
 
-            <div class="section-header">
-              The following players are invited to the next tryout session
-            </div>
-            
-            <div class="section-header">
-              Next Session: ${sessionTime} ${sessionDate} at ${sessionLocation}
-            </div>
+                <div class="section-header">
+                  The following players are invited to the next tryout session
+                </div>
 
+                <div class="section-header">
+                  Next Session: ${sessionTime} ${sessionDate} at ${sessionLocation}
+                </div>
 
                 <div class="numbers">
                   ${
