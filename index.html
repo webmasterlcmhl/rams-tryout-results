@@ -10,6 +10,7 @@
       margin: 0;
       padding: 0;
     }
+
     .header {
       background: #b00000;
       color: white;
@@ -19,11 +20,13 @@
       font-weight: bold;
       text-transform: uppercase;
     }
+
     .logo {
       display: block;
       margin: 25px auto 10px auto;
       max-width: 300px;
     }
+
     .notice {
       text-align: center;
       font-size: 22px;
@@ -38,12 +41,14 @@
       border-right: 8px solid #000000;
       text-transform: uppercase;
     }
+
     .timestamp {
       text-align: center;
       margin-top: 10px;
       font-size: 16px;
       color: #444;
     }
+
     .level-box {
       max-width: 900px;
       margin: 30px auto;
@@ -52,7 +57,9 @@
       border-left: 8px solid #b00000;
       border-right: 8px solid #000000;
       border-radius: 6px;
+      text-align: left;
     }
+
     .level-title {
       font-size: 26px;
       font-weight: bold;
@@ -60,12 +67,21 @@
       color: #b00000;
       text-transform: uppercase;
     }
+
     h3 {
+      margin-top: 20px;
       margin-bottom: 10px;
       color: #b00000;
       text-transform: uppercase;
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: bold;
     }
+
+    .numbers {
+      margin-left: 10px;
+      margin-bottom: 20px;
+    }
+
     .numbers span {
       display: inline-block;
       margin: 8px 12px;
@@ -76,27 +92,34 @@
       font-weight: bold;
       font-size: 20px;
     }
+
     .fallback {
       font-size: 18px;
       color: #666;
       padding: 10px 0;
-      text-align: center;
       font-style: italic;
     }
+
     .sitting-header {
       font-size: 16px;
       color: #333;
-      margin: 20px 0 10px 0;
-      text-align: left;
+      margin-top: 25px;
+      margin-bottom: 10px;
       font-weight: 600;
     }
-    .closing-note {
-      font-size: 15px;
-      color: #333;
-      text-align: left;
-      line-height: 1.6;
-      margin-top: 25px;
+
+    .section-divider {
+      border-top: 1px solid #ddd;
+      margin: 25px 0;
     }
+
+    .closing-note {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      margin-top: 30px;
+    }
+
     .closing-note a {
       color: #b00000;
       font-weight: bold;
@@ -210,7 +233,7 @@
               <div class="level-box">
                 <div class="level-title">${level} Tryout Update</div>
 
-                <h3>NEXT SESSION: ${sessionDate} / ${sessionTime} / ${sessionLocation}</h3>
+                <h3>Next Session: ${sessionDate} / ${sessionTime} / ${sessionLocation}</h3>
 
                 <h3>Players Playing Tonight</h3>
                 <div class="numbers">
@@ -221,10 +244,9 @@
                   }
                 </div>
 
-                <div class="sitting-header">
-                  The following players are invited to continue with the tryout process,
-                  but will not be participating in the session on ${sessionDate}.
-                </div>
+                <div class="section-divider"></div>
+
+                <h3>Players Sitting Tonight</h3>
                 <div class="numbers">
                   ${
                     sitting.length > 0
@@ -233,22 +255,12 @@
                   }
                 </div>
 
+                <div class="section-divider"></div>
+
                 <div class="closing-note">
                   Thank you to everyone who participated in the Rams competitive tryout process.<br>
                   Those not listed above should report to the ${hlLevel} SMHA house league sort-out process.<br><br>
                   House League Convenor Contact:<br>
                   ${
                     convenorEmail
-                      ? `<a href="mailto:${convenorEmail}">${convenorEmail}</a>`
-                      : "Email not available"
-                  }
-                </div>
-              </div>
-            `;
-            container.innerHTML += html;
-          });
-      });
-  </script>
-
-</body>
-</html>
+                      ? `<a href
