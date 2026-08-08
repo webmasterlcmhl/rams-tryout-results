@@ -100,14 +100,6 @@
       font-style: italic;
     }
 
-    .sitting-header {
-      font-size: 16px;
-      color: #333;
-      margin-top: 25px;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
     .section-divider {
       border-top: 1px solid #ddd;
       margin: 25px 0;
@@ -258,9 +250,19 @@
                 <div class="section-divider"></div>
 
                 <div class="closing-note">
-                  Thank you to everyone who participated in the Rams competitive tryout process.<br>
-                  Those not listed above should report to the ${hlLevel} SMHA house league sort-out process.<br><br>
-                  House League Convenor Contact:<br>
+                  Thank you to everyone who participated in the Rams competitive tryout process. Those not listed above should report to the ${hlLevel} SMHA house league sort-out process.<br><br>
                   ${
                     convenorEmail
-                      ? `<a href
+                      ? `<a href="mailto:${convenorEmail}">${convenorEmail}</a>`
+                      : "Email not available"
+                  }
+                </div>
+              </div>
+            `;
+            container.innerHTML += html;
+          });
+      });
+  </script>
+
+</body>
+</html>
