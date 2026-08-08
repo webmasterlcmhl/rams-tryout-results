@@ -68,6 +68,11 @@
       text-transform: uppercase;
     }
 
+    .section-divider {
+      border-top: 1px solid #ddd;
+      margin: 25px 0;
+    }
+
     h3 {
       margin-top: 20px;
       margin-bottom: 10px;
@@ -100,9 +105,12 @@
       font-style: italic;
     }
 
-    .section-divider {
-      border-top: 1px solid #ddd;
-      margin: 25px 0;
+    .sitting-header {
+      font-size: 16px;
+      color: #333;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      font-weight: 600;
     }
 
     .closing-note {
@@ -224,12 +232,12 @@
             const html = `
               <div class="level-box">
                 <div class="level-title">${level} Tryout Update</div>
-            
-                <h3>Next Session: ${sessionDate} / ${sessionTime} / ${sessionLocation}</h3>
-                
                 <div class="section-divider"></div>
-                
-                <h3>Players Invited To Continue</h3>
+
+                <h3>Next Session: ${sessionDate} / ${sessionTime} / ${sessionLocation}</h3>
+                <div class="section-divider"></div>
+
+                <h3>Players Playing Tonight</h3>
                 <div class="numbers">
                   ${
                     playing.length > 0
@@ -237,10 +245,13 @@
                       : `<div class="fallback">No players playing tonight.</div>`
                   }
                 </div>
-
                 <div class="section-divider"></div>
 
-                <h3>Players Sitting Tonight</h3>
+                <div class="sitting-header">
+                  The following players are invited to continue to the next tryout session,
+                  ${sessionTime} ${sessionDate} at ${sessionLocation}:
+                </div>
+
                 <div class="numbers">
                   ${
                     sitting.length > 0
@@ -248,7 +259,6 @@
                       : `<div class="fallback">No players sitting tonight.</div>`
                   }
                 </div>
-
                 <div class="section-divider"></div>
 
                 <div class="closing-note">
