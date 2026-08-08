@@ -78,7 +78,7 @@
       font-style: italic;
     }
     .closing-note {
-      margin-top: 20px;
+      margin-top: 25px;
       font-size: 18px;
       color: #333;
       text-align: center;
@@ -89,16 +89,22 @@
       font-weight: bold;
       text-decoration: none;
     }
+    h3 {
+      margin-bottom: 10px;
+      color: #b00000;
+      text-transform: uppercase;
+      font-size: 20px;
+    }
   </style>
 </head>
 
 <body>
 
   <img src="RAMS-logo.png" alt="Rams Logo" class="logo">
-  <div class="header">Rams Roster Updates</div>
+  <div class="header">Rams Tryout Updates</div>
 
   <div class="notice">
-    Roster updates will be posted to this page. Please check back regularly for the latest information.
+    Tryout updates will be posted to this page. Please check back regularly for the latest information.
   </div>
 
   <div id="timestamp" class="timestamp"></div>
@@ -108,7 +114,8 @@
   <script>
 
     // --- CSV URL ---
-    const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
+    const csvURL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?output=csv";
 
     // --- Fetch CSV ---
     fetch(csvURL)
@@ -138,13 +145,14 @@
           "U16/U18 (Black)": "u18convenor@stittsvilleminorhockey.com"
         };
 
-        // --- Existing tryout logic ---
+        // --- Column indexes ---
         const jerseyIndex = headers.indexOf("JerseyNumber");
         const statusIndex = headers.indexOf("Status");
         const levelIndex = headers.indexOf("TeamLevel");
 
         let levels = {};
 
+        // --- Process rows ---
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
 
@@ -156,9 +164,10 @@
 
           if (!levels[level]) levels[level] = [];
 
-          if (status === "InvitedBack") {
-            levels[level].push(jersey);
-          }
+          levels[level].push({
+            jersey,
+            status
+          });
         }
 
         const container = document.getElementById("levels");
@@ -171,16 +180,36 @@
             // Normalize level name for lookup
             const normalizedLevel = level.trim().replace(/\s+/g, " ");
 
-            const jerseys = levels[level].sort((a, b) => a - b);
+            const invitedBack = levels[level]
+              .filter(j => j.status === "InvitedBack")
+              .map(j => j.jersey)
+              .sort((a, b) => a - b);
+
+            const notPlayingTonight = levels[level]
+              .filter(j => j.status === "NotPlayingTonight")
+              .map(j => j.jersey)
+              .sort((a, b) => a - b);
 
             const html = `
               <div class="level-box">
-                <div class="level-title">${level} Invited Back</div>
+
+                <div class="level-title">${level} Tryout Update</div>
+
+                <h3>Players Invited to Continue Tryouts</h3>
                 <div class="numbers">
                   ${
-                    jerseys.length > 0
-                      ? jerseys.map(num => `<span>${num}</span>`).join("")
+                    invitedBack.length > 0
+                      ? invitedBack.map(num => `<span>${num}</span>`).join("")
                       : `<div class="fallback">No players invited yet.</div>`
+                  }
+                </div>
+
+                <h3 style="margin-top:25px;">Players Invited to Continue, but Not Playing Tonight</h3>
+                <div class="numbers">
+                  ${
+                    notPlayingTonight.length > 0
+                      ? notPlayingTonight.map(num => `<span>${num}</span>`).join("")
+                      : `<div class="fallback">No players are sitting out tonight.</div>`
                   }
                 </div>
 
@@ -194,6 +223,7 @@
                     }
                   </strong>
                 </div>
+
               </div>
             `;
 
@@ -205,4 +235,3 @@
 
 </body>
 </html>
-
