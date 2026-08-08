@@ -95,6 +95,24 @@
       text-transform: uppercase;
       font-size: 20px;
     }
+    .final-note {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff3f3;
+      border-left: 8px solid #b00000;
+      border-right: 8px solid #000000;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 20px;
+      color: #b00000;
+      line-height: 1.5;
+    }
+    .final-note a {
+      color: #b00000;
+      font-weight: bold;
+      text-decoration: none;
+    }
   </style>
 </head>
 
@@ -229,6 +247,34 @@
 
             container.innerHTML += html;
           });
+
+        // --- Dynamic closing message ---
+        const allLevels = Object.keys(levels)
+          .map(l => l.trim())
+          .filter(l => l !== "" && l.toLowerCase() !== "teamlevel")
+          .sort();
+
+        const closingLevel = allLevels[0];
+        const normalizedClosingLevel = closingLevel.replace(/\s+/g, " ");
+        const closingEmail = convenorEmails[normalizedClosingLevel] || "";
+
+        const finalNote = document.createElement("div");
+        finalNote.className = "final-note";
+
+        finalNote.innerHTML = `
+          <strong>
+            Thank you to everyone who participated in the Rams competitive tryout process.
+            Those not listed above should report to the ${closingLevel} SMHA house league sort-out process.<br><br>
+            ${
+              closingEmail
+                ? `House League Convenor Contact: <a href="mailto:${closingEmail}">${closingEmail}</a>`
+                : ""
+            }
+          </strong>
+        `;
+
+        document.body.appendChild(finalNote);
+
       });
 
   </script>
