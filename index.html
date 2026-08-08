@@ -73,13 +73,13 @@
       margin: 25px 0;
     }
 
-    h3 {
+    .section-header {
+      font-size: 18px;
+      color: #b00000;
+      font-weight: bold;
       margin-top: 20px;
       margin-bottom: 10px;
-      color: #b00000;
-      text-transform: uppercase;
-      font-size: 18px;
-      font-weight: bold;
+      text-transform: none;
     }
 
     .numbers {
@@ -103,14 +103,6 @@
       color: #666;
       padding: 10px 0;
       font-style: italic;
-    }
-
-    .sitting-header {
-      font-size: 16px;
-      color: #333;
-      margin-top: 25px;
-      margin-bottom: 10px;
-      font-weight: 600;
     }
 
     .closing-note {
@@ -234,11 +226,8 @@
                 <div class="level-title">${level} Tryout Update</div>
                 <div class="section-divider"></div>
 
-                <h3>Next Session: ${sessionDate} / ${sessionTime} / ${sessionLocation}</h3>
-                <div class="section-divider"></div>
-
-                <div class="sitting-header">
-                  The following players are playing in the next tryout session,
+                <div class="section-header">
+                  The following players are invited to the next tryout session,
                   ${sessionTime} ${sessionDate} at ${sessionLocation}:
                 </div>
 
@@ -252,7 +241,7 @@
 
                 <div class="section-divider"></div>
 
-                <div class="sitting-header">
+                <div class="section-header">
                   The following players are invited to continue with the tryout process,
                   but will not be participating in the session on ${sessionDate}.
                 </div>
