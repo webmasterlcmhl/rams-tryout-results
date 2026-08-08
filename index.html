@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Rams Tryout Results</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background: #b00000;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .message-box {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 25px;
+      background: #ffffff;
+      border-left: 8px solid #b00000;
+      border-right: 8px solid #000000;
+      border-radius: 6px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    .numbers {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 22px;
+      text-align: center;
+    }
+    .numbers span {
+      display: inline-block;
+      margin: 8px 12px;
+      padding: 10px 16px;
+      background: #b00000;
+      color: #fff;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">Rams Tryout Results</div>
+
+  <div class="message-box">
+    <p>The following jersey numbers have been selected to advance to the next stage of evaluations.</p>
+    <p>Players whose numbers do not appear below should report to their designated house league convenor for placement.</p>
+    <p>We thank all athletes for their effort and participation throughout the tryout process.</p>
+  </div>
+
+  <div class="numbers" id="results">Loading results...</div>
+
+  <script>
+    const sheetID = "1AOU-uDkA6mpJNOwoxjXUP94GYrZAd1q0OIUp14bwagc";
+    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
+
+    fetch(url)
+      .then(res => res.text())
+      .then(text => {
+        const json = JSON.parse(text.substring(47, text.length - 2));
+        const rows = json.table.rows;
+
+        let invited = [];
+
+        rows.forEach(row => {
+          const jersey = row.c[0]?.v;
+          const status = row.c[1]?.v;
+
+          if (status === "InvitedBack") {
+            invited.push(jersey);
+          }
+        });
+
+        invited.sort((a, b) => a - b);
+
+        const container = document.getElementById("results");
+        container.innerHTML = invited.length
+          ? invited.map(num => `<span>${num}</span>`).join("")
+          : "No players have been invited back yet.";
+      });
+  </script>
+
+</body>
+</html>
