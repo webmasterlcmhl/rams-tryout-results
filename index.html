@@ -60,6 +60,13 @@
       color: #b00000;
       text-transform: uppercase;
     }
+    .session-info {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+      line-height: 1.4;
+    }
     .numbers span {
       display: inline-block;
       margin: 8px 12px;
@@ -167,6 +174,9 @@
         const jerseyIndex = headers.indexOf("JerseyNumber");
         const statusIndex = headers.indexOf("Status");
         const levelIndex = headers.indexOf("TeamLevel");
+        const nextDateIndex = headers.indexOf("NextSessionDate");
+        const nextTimeIndex = headers.indexOf("NextSessionTime");
+        const nextLocationIndex = headers.indexOf("NextSessionLocation");
 
         let levels = {};
 
@@ -177,6 +187,9 @@
           const jersey = row[jerseyIndex]?.trim();
           const status = row[statusIndex]?.trim();
           const level = row[levelIndex]?.trim();
+          const nextDate = row[nextDateIndex]?.trim();
+          const nextTime = row[nextTimeIndex]?.trim();
+          const nextLocation = row[nextLocationIndex]?.trim();
 
           if (!jersey || !status || !level) continue;
 
@@ -184,7 +197,10 @@
 
           levels[level].push({
             jersey,
-            status
+            status,
+            nextDate,
+            nextTime,
+            nextLocation
           });
         }
 
@@ -208,10 +224,21 @@
               .map(j => j.jersey)
               .sort((a, b) => a - b);
 
+            // --- Next session info ---
+            const sessionDate = levels[level][0].nextDate || "";
+            const sessionTime = levels[level][0].nextTime || "";
+            const sessionLocation = levels[level][0].nextLocation || "";
+
             const html = `
               <div class="level-box">
 
                 <div class="level-title">${level} Tryout Update</div>
+
+                <div class="session-info">
+                  <strong>Next Session:</strong><br>
+                  ${sessionDate} at ${sessionTime}<br>
+                  ${sessionLocation}
+                </div>
 
                 <h3>Players Invited to Continue Tryouts</h3>
                 <div class="numbers">
@@ -222,7 +249,7 @@
                   }
                 </div>
 
-                <h3 style="margin-top:25px;">The following players are invited back and will be sitting but are still expected to attend the next session:</h3>
+                <h3 style="margin-top:25px;">Players Invited to Continue, but Not Playing Tonight</h3>
                 <div class="numbers">
                   ${
                     notPlayingTonight.length > 0
@@ -254,26 +281,28 @@
           .filter(l => l !== "" && l.toLowerCase() !== "teamlevel")
           .sort();
 
-        const closingLevel = allLevels[0];
-        const normalizedClosingLevel = closingLevel.replace(/\s+/g, " ");
-        const closingEmail = convenorEmails[normalizedClosingLevel] || "";
+        if (allLevels.length > 0) {
+          const closingLevel = allLevels[0];
+          const normalizedClosingLevel = closingLevel.replace(/\s+/g, " ");
+          const closingEmail = convenorEmails[normalizedClosingLevel] || "";
 
-        const finalNote = document.createElement("div");
-        finalNote.className = "final-note";
+          const finalNote = document.createElement("div");
+          finalNote.className = "final-note";
 
-        finalNote.innerHTML = `
-          <strong>
-            Thank you to everyone who participated in the Rams competitive tryout process.
-            Those not listed above should report to the ${closingLevel} SMHA house league sort-out process.<br><br>
-            ${
-              closingEmail
-                ? `House League Convenor Contact: <a href="mailto:${closingEmail}">${closingEmail}</a>`
-                : ""
-            }
-          </strong>
-        `;
+          finalNote.innerHTML = `
+            <strong>
+              Thank you to everyone who participated in the Rams competitive tryout process.
+              Those not listed above should report to the ${closingLevel} SMHA house league sort-out process.<br><br>
+              ${
+                closingEmail
+                  ? `House League Convenor Contact: <a href="mailto:${closingEmail}">${closingEmail}</a>`
+                  : ""
+              }
+            </strong>
+          `;
 
-        document.body.appendChild(finalNote);
+          document.body.appendChild(finalNote);
+        }
 
       });
 
