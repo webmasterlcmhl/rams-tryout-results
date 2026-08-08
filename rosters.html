@@ -85,13 +85,16 @@
   <div id="teams"></div>
 
   <script>
-    // --- Timestamp ---
-    const now = new Date();
-    const formattedNow = now.toLocaleString("en-CA", {
-      dateStyle: "long",
-      timeStyle: "short"
-    });
-    document.getElementById("timestamp").innerHTML = `Last updated: ${formattedNow}`;
+  // --- Timestamp from sheet ---
+  const updatedIndex = headers.indexOf("LastUpdated");
+  let lastUpdated = "";
+
+  if (updatedIndex !== -1) {
+    lastUpdated = rows[1][updatedIndex]?.trim();
+  }
+
+  document.getElementById("timestamp").innerHTML =
+    `Last updated: ${lastUpdated}`;
 
     // --- CSV URL for Rosters tab ---
     const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMa__TQSPEc-Vu7e3My8LTryx9pi_ERDmAJL-l-7hFG4lHzH1Hsl67OUDy27gPV7jbPmc4Q6QeXuI_/pub?gid=1148910874&single=true&output=csv";
